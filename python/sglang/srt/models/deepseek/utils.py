@@ -13,6 +13,10 @@
 # limitations under the License.
 # ==============================================================================
 
+from typing import Protocol, Any
+
+import torch
+
 from sglang.srt.utils import (
     is_hip,
     is_cuda,
@@ -23,7 +27,24 @@ _is_hip = is_hip()
 _is_cuda = is_cuda()
 _is_npu = is_npu()
 
-def awq_dequantize_func():
+
+class AWQDequantizeFunc(Protocol):
+    """Protocol for AWQ dequantization functions.
+    
+    All implementations must accept at least 3 tensor arguments (qweight, scales, zeros).
+    Some implementations may accept additional optional arguments.
+    """
+    def __call__(
+        self,
+        qweight: torch.Tensor,
+        scales: torch.Tensor,
+        zeros: torch.Tensor,
+        *args: Any,
+    ) -> torch.Tensor:
+        ...
+
+
+def awq_dequantize_func() -> AWQDequantizeFunc | None:
     """Get the appropriate AWQ dequantization function based on the hardware backend.
     
     This function performs lazy import of the AWQ dequantization implementation

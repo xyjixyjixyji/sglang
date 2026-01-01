@@ -17,7 +17,7 @@ import concurrent.futures
 import torch
 import tqdm
 import logging
-from typing import Iterable, Tuple, Optional, List, Callable
+from typing import Iterable, Tuple, Optional, List
 
 from sglang.srt.environ import envs
 from sglang.srt.utils import (
@@ -85,6 +85,7 @@ def enable_nextn_moe_bf16_cast_to_fp8(quant_config):
 
 
 class DeepSeekV2WeightLoaderMixin:
+
     def __init__(self, is_nextn_model: bool = False):
         '''
         Args:
@@ -631,4 +632,3 @@ class DeepSeekV2WeightLoaderMixin:
             self._mark_nextn_moe_weights_as_ue8m0()
 
         return list(weights_dict.items())
-
