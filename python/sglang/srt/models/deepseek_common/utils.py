@@ -17,6 +17,8 @@ from typing import Protocol, Any
 
 import torch
 
+from sglang.srt.environ import envs
+from sglang.srt.layers.moe import get_moe_runner_backend
 from sglang.srt.utils import (
     is_hip,
     is_cuda,
@@ -69,3 +71,17 @@ def awq_dequantize_func() -> AWQDequantizeFunc | None:
         return awq_dequantize_decomposition
     else:
         return None
+
+
+def enable_nextn_moe_bf16_cast_to_fp8(quant_config):
+    """Check if nextn MoE weights should be cast from bf16 to fp8.
+    
+    This is used for DeepSeek nvfp4 checkpoint optimization where MoE weights
+    in the nextn speculative decoding layer are quantized to fp8 for better performance.
+    """
+    return (
+        envs.SGLANG_NVFP4_CKPT_FP8_NEXTN_MOE.get()
+        and quant_config is not None
+        and quant_config.get_name() == "modelopt_fp4"
+        and get_moe_runner_backend().is_deep_gemm()
+    )

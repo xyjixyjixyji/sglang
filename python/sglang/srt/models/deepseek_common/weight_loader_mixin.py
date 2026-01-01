@@ -53,7 +53,10 @@ from sglang.srt.layers import deep_gemm_wrapper
 from sglang.srt.layers.moe.fused_moe_triton.layer import FusedMoE
 from sglang.srt.layers.quantization.fp8_utils import quant_weight_ue8m0
 from sglang.srt.layers.utils import get_layer_id
-from sglang.srt.models.deepseek_common.utils import awq_dequantize_func
+from sglang.srt.models.deepseek_common.utils import (
+    awq_dequantize_func,
+    enable_nextn_moe_bf16_cast_to_fp8,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -73,15 +76,6 @@ NVFP4_CKPT_FP8_ATTN_QUANT_MODULES = ["q_b_proj"]
 
 if _use_aiter_gfx95:
     from sglang.srt.layers.quantization.quark.utils import quark_post_load_weights
-
-def enable_nextn_moe_bf16_cast_to_fp8(quant_config):
-    return (
-        envs.SGLANG_NVFP4_CKPT_FP8_NEXTN_MOE.get()
-        and quant_config is not None
-        and quant_config.get_name() == "modelopt_fp4"
-        and get_moe_runner_backend().is_deep_gemm()
-    )
-
 
 
 class DeepSeekV2WeightLoaderMixin:
