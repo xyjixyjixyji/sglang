@@ -32,7 +32,6 @@ from sglang.srt.utils import (
     is_gfx95_supported,
 )
 from sglang.srt.layers.quantization.fp8_kernel import is_fp8_fnuz
-from sglang.srt.layers.moe import get_moe_runner_backend
 from sglang.srt.model_loader.weight_utils import default_weight_loader
 from sglang.srt.model_loader.utils import (
     should_async_load,

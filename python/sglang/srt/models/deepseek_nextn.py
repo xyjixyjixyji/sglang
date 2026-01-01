@@ -57,7 +57,6 @@ from sglang.srt.utils import BumpAllocator, add_prefix, is_cuda, is_npu
 
 logger = logging.getLogger(__name__)
 
-
 _is_cuda = is_cuda()
 _is_npu = is_npu()
 
