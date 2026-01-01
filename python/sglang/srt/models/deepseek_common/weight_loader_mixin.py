@@ -29,9 +29,9 @@ from sglang.srt.utils import (
     is_cuda,
     is_npu,
     is_cpu,
-    is_fp8_fnuz,
     is_gfx95_supported,
 )
+from sglang.srt.layers.quantization.fp8_kernel import is_fp8_fnuz
 from sglang.srt.layers.moe import get_moe_runner_backend
 from sglang.srt.model_loader.weight_utils import default_weight_loader
 from sglang.srt.model_loader.utils import (
@@ -53,7 +53,7 @@ from sglang.srt.layers import deep_gemm_wrapper
 from sglang.srt.layers.moe.fused_moe_triton.layer import FusedMoE
 from sglang.srt.layers.quantization.fp8_utils import quant_weight_ue8m0
 from sglang.srt.layers.utils import get_layer_id
-from sglang.srt.models.deepseek.utils import awq_dequantize_func
+from sglang.srt.models.deepseek_common.utils import awq_dequantize_func
 
 logger = logging.getLogger(__name__)
 

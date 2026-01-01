@@ -46,6 +46,7 @@ from sglang.srt.layers.vocab_parallel_embedding import (
     VocabParallelEmbedding,
 )
 from sglang.srt.model_executor.forward_batch_info import ForwardBatch
+from sglang.srt.models.deepseek_common import DeepSeekV2WeightLoaderMixin
 from sglang.srt.models.deepseek_v2 import (
     DeepseekV2DecoderLayer,
     DeepseekV3ForCausalLM,
@@ -199,6 +200,7 @@ class DeepseekV3ForCausalLMNextN(DeepseekV3ForCausalLM):
         prefix: str = "",
     ) -> None:
         nn.Module.__init__(self)
+        DeepSeekV2WeightLoaderMixin.__init__(self, is_nextn_model=True)
         self.config = config
         self.tp_size = get_tensor_model_parallel_world_size()
         self.quant_config = quant_config
@@ -249,7 +251,7 @@ class DeepseekV3ForCausalLMNextN(DeepseekV3ForCausalLM):
         )
 
     def load_weights(self, weights: Iterable[Tuple[str, torch.Tensor]]):
-        super().load_weights(weights, is_nextn=True)
+        super().load_weights(weights)
 
 
 EntryClass = [DeepseekV3ForCausalLMNextN]

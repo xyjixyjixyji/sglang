@@ -120,6 +120,7 @@ from sglang.srt.layers.vocab_parallel_embedding import (
 )
 from sglang.srt.model_executor.forward_batch_info import ForwardBatch, PPProxyTensors
 from sglang.srt.model_loader.weight_utils import default_weight_loader
+from sglang.srt.models.deepseek_common import DeepSeekV2WeightLoaderMixin
 from sglang.srt.server_args import get_global_server_args
 from sglang.srt.speculative.spec_info import SpeculativeAlgorithm
 from sglang.srt.utils import (
@@ -3233,7 +3234,7 @@ class DeepseekV2Model(nn.Module):
         return hidden_states, aux_hidden_states
 
 
-class DeepseekV2ForCausalLM(nn.Module):
+class DeepseekV2ForCausalLM(nn.Module, DeepSeekV2WeightLoaderMixin):
     # for quark model load
     packed_modules_mapping = {}
 
@@ -3243,7 +3244,8 @@ class DeepseekV2ForCausalLM(nn.Module):
         quant_config: Optional[QuantizationConfig] = None,
         prefix: str = "",
     ) -> None:
-        super().__init__()
+        nn.Module.__init__(self)
+        DeepSeekV2WeightLoaderMixin.__init__(self, is_nextn_model=False)
         # for quark model load
         # Fuse q_a_proj and kv_a_proj_with_mqa along output dimension when q_lora_rank is not None
         self.fuse_qkv_a_proj = (
