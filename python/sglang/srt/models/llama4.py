@@ -300,6 +300,7 @@ class Llama4Attention(nn.Module):
             self.head_dim,
             self.scaling,
             num_kv_heads=self.num_kv_heads,
+            sliding_window_size=config.attention_chunk_size,
             layer_id=layer_id,
             prefix=add_prefix("attn", prefix),
             use_irope=self.use_rope,
